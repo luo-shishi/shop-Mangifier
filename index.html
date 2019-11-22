@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>放大镜</title>
+<style type="text/css">
+.bigbox{
+	width: 710px;
+	margin: 0 auto;
+}
+.box1{
+	width: 300px;
+	height: 300px;
+	border: 1px solid #ccc;
+	position: relative;
+	float: left;
+    overflow: hidden;
+}
+.box1 img{
+	width: 300px;
+}
+.box2{
+	width: 400px;
+	height: 400px;
+	border: 1px solid #ccc;
+	position: relative;
+	float: left;
+	overflow: hidden;
+	display: none;
+}
+.box2 img{
+	width: 600px;
+	position: absolute;
+}
+.small{
+	width: 180px;
+	height: 180px;
+	background: rgba(0,0,0,0.3);
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none
+}
+</style>
+</head>
+<body>
+	<div class="bigbox">
+		<div class="box1">
+			<img src="./images/test.jpg" alt="">
+			<div class="small"></div>
+		</div>
+		<div class="box2">
+			<img src="./images/test.jpg" alt="" class="imgs">
+		</div>
+	</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	//获取元素
+	var box1 = $(".box1")
+	var small = $(".small")
+	var box2 = $(".box2")
+	var imgs = $(".imgs")
+	// 创建鼠标移入移出事件
+	box1.hover(function(){
+		//移入显示隐藏的盒子
+		small.css("display","block")
+		box2.css("display","block")
+	},function(){
+		//移出继续隐藏
+		small.css("display","none")
+		box2.css("display","none")
+	})
+	//创建鼠标移动事件
+	box1.mousemove(function(e){
+		var e = e || event;
+		//获取小盒子可移动的距离
+		var x = e.clientX - box1.offset().left - small[0].offsetWidth/2;
+		var y = e.clientY - box1.offset().top - small[0].offsetHeight/2;
+		// 判断小盒子到大盒子左边距为0时,让他保持为0
+		if (x<0) {
+			x=0;
+		}
+		// 判断小盒子到大盒子上边距为0时,让他保持为0
+		if (y<0) {
+			y=0;
+		}
+		// 判断小盒子到大盒子右边距为最大可移动距离时,让他保持为最大可移动距离
+		if (x>box1[0].offsetWidth-small[0].offsetWidth) {
+			x=box1[0].offsetWidth-small[0].offsetWidth
+		}
+		// 判断小盒子到大盒子下边距为最大可移动距离时,让他保持为最大可移动距离
+		if (y>box1[0].offsetHeight-small[0].offsetHeight) {
+			y=box1[0].offsetHeight-small[0].offsetHeight
+		}
+		//小盒子的位置
+		small.css({"left":x+"px","top":y+"px"})
+		//隐藏的大盒子的显示位置
+		imgs.css({"left":-x*2+"px","top":-y*2+"px"})
+	})
+})
+</script>
+</html>
